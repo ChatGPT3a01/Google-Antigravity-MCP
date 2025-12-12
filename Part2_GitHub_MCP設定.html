@@ -202,8 +202,8 @@
                     讓 AI 助手直接管理你的 GitHub 倉庫、Issue 和 Pull Request
                 </h2>
                 <div style="margin-top: 40px; display: flex; gap: 20px;">
-                    <span class="highlight">Remote MCP</span>
-                    <span class="highlight">Local MCP (Docker)</span>
+                    <span class="highlight">Remote MCP（推薦）</span>
+                    <span class="highlight">GitHub CLI</span>
                     <span class="highlight">100+ 工具</span>
                 </div>
             </div>
@@ -244,8 +244,8 @@
         <!-- Slide 3: 安裝方式選擇 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🔧 兩種安裝方式</h2>
-                <p>GitHub MCP 有兩種安裝方式，選擇適合你的：</p>
+                <h2>🔧 推薦安裝方式：Remote MCP Server</h2>
+                <p>GitHub MCP 最簡單的安裝方式是使用 Remote MCP Server：</p>
 
                 <div class="concept-grid">
                     <div class="concept-card" style="border: 3px solid #28a745;">
@@ -256,25 +256,27 @@
                             <li>不需要 Node.js</li>
                             <li>支援 OAuth 一鍵授權</li>
                             <li>由 GitHub 託管維護</li>
+                            <li>設定簡單，幾分鐘完成</li>
                         </ul>
-                        <p><strong>適合：</strong>大多數使用者</p>
+                        <p><strong>適合：</strong>所有使用者</p>
                     </div>
-                    <div class="concept-card">
-                        <h3>🐳 Local MCP Server</h3>
+                    <div class="concept-card" style="border: 3px solid #667eea;">
+                        <h3>💻 搭配 GitHub CLI</h3>
                         <p><strong>優點：</strong></p>
                         <ul>
-                            <li>完全本地運行</li>
-                            <li>更高的控制權</li>
-                            <li>支援 GitHub Enterprise</li>
+                            <li>命令列操作更方便</li>
+                            <li>可快速建立/管理 Repo</li>
+                            <li>支援 OAuth 登入</li>
+                            <li>與 MCP 完美搭配</li>
                         </ul>
-                        <p><strong>需要：</strong>Docker Desktop</p>
+                        <p><strong>指令：</strong><code>gh repo create</code></p>
                     </div>
                 </div>
 
-                <div class="box warning">
-                    <strong>重要提醒</strong><br>
-                    如果你之前安裝 Local MCP 遇到「Docker not found」錯誤，那是因為 Local 模式需要 Docker。<br>
-                    建議改用 <strong>Remote MCP Server</strong>，不需要 Docker！
+                <div class="box success">
+                    <strong>建議</strong><br>
+                    使用 <strong>Remote MCP Server</strong> + <strong>GitHub CLI</strong> 組合，<br>
+                    不需要 Docker，設定最簡單！
                 </div>
             </div>
         </div>
@@ -373,40 +375,49 @@
             </div>
         </div>
 
-        <!-- Slide 6: Local MCP - Docker 安裝 -->
+        <!-- Slide 6: GitHub CLI 安裝與使用 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🐳 Local MCP：Docker 安裝方式</h2>
-                <p>如果你需要本地運行或使用 GitHub Enterprise，可以用 Docker：</p>
+                <h2>💻 GitHub CLI 安裝與使用</h2>
+                <p>GitHub CLI 讓你可以在命令列快速操作 GitHub，與 MCP 完美搭配：</p>
 
-                <div class="box warning">
-                    <strong>前置條件</strong><br>
-                    • 需要安裝 Docker Desktop<br>
-                    • 確保 Docker 正在運行（右下角有鯨魚圖示）<br>
-                    • 啟用 WSL2 backend（Windows 使用者）
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>安裝 GitHub CLI</h3>
+                        <p>Windows 使用 winget：</p>
+                        <pre>winget install --id GitHub.cli</pre>
+                        <p>或從官網下載：<a href="https://cli.github.com/" target="_blank" style="color: #667eea;">https://cli.github.com/</a></p>
+                    </div>
                 </div>
 
-                <h3>MCP 設定檔格式</h3>
-                <pre>{
-  "mcpServers": {
-    "github": {
-      "command": "docker",
-      "args": [
-        "run", "-i", "--rm",
-        "-e", "GITHUB_PERSONAL_ACCESS_TOKEN",
-        "ghcr.io/github/github-mcp-server"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "YOUR_TOKEN"
-      }
-    }
-  }
-}</pre>
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>登入 GitHub</h3>
+                        <pre>gh auth login</pre>
+                        <p>選擇 <code>GitHub.com</code> → <code>HTTPS</code> → <code>Login with a web browser</code></p>
+                    </div>
+                </div>
 
-                <div class="box danger">
-                    <strong>常見錯誤</strong><br>
-                    如果看到 <code>docker: error during connect...</code><br>
-                    表示 Docker 沒有啟動，請先開啟 Docker Desktop！
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h3>常用指令</h3>
+                        <pre># 建立新倉庫
+gh repo create my-repo --public
+
+# 從本地資料夾建立並推送
+gh repo create my-repo --public --source=. --push
+
+# 查看倉庫狀態
+gh repo view</pre>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    <strong>推薦組合</strong><br>
+                    Remote MCP Server + GitHub CLI = 最簡單的 GitHub 開發環境！
                 </div>
             </div>
         </div>
@@ -493,14 +504,6 @@
             <div class="content-card">
                 <h2>❓ 常見問題排解</h2>
 
-                <div class="box danger">
-                    <h3>錯誤：Docker not found / cannot find the file</h3>
-                    <p><strong>原因：</strong>你使用 Local MCP Server 模式，但沒有安裝 Docker</p>
-                    <p><strong>解決方案：</strong></p>
-                    <p>1. 安裝 Docker Desktop 並啟動<br>
-                    2. 或改用 <strong>Remote MCP Server</strong>（推薦，不需要 Docker）</p>
-                </div>
-
                 <div class="box warning">
                     <h3>錯誤：Unauthorized / 401</h3>
                     <p><strong>原因：</strong>Token 無效或權限不足</p>
@@ -511,6 +514,18 @@
                     <h3>工具列表是空的</h3>
                     <p><strong>原因：</strong>MCP Server 還沒啟動</p>
                     <p><strong>解決：</strong>按 Refresh 按鈕，或重新啟動 Antigravity</p>
+                </div>
+
+                <div class="box warning">
+                    <h3>GitHub CLI 登入失敗</h3>
+                    <p><strong>原因：</strong>瀏覽器沒有開啟或網路問題</p>
+                    <p><strong>解決：</strong>執行 <code>gh auth login</code> 並選擇「Paste an authentication token」手動輸入 PAT</p>
+                </div>
+
+                <div class="box info">
+                    <h3>gh: command not found</h3>
+                    <p><strong>原因：</strong>GitHub CLI 尚未安裝或未加入 PATH</p>
+                    <p><strong>解決：</strong>重新安裝 GitHub CLI，或重新開啟終端機</p>
                 </div>
 
                 <div class="box success" style="text-align: center; margin-top: 30px;">
