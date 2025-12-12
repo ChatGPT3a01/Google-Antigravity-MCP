@@ -499,7 +499,49 @@ gh repo view</pre>
             </div>
         </div>
 
-        <!-- Slide 10: 常見問題 -->
+        <!-- Slide 10: 原生工具 vs Docker -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🤔 為什麼有些操作成功、有些失敗？</h2>
+                <p>這取決於使用的<strong>底層技術</strong>不同：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card" style="border: 3px solid #28a745;">
+                        <h3>✅ 原生工具（推薦）</h3>
+                        <p><strong>範例：</strong>git.exe、gh.exe</p>
+                        <ul>
+                            <li>直接在 Windows 運行</li>
+                            <li>不需要虛擬環境</li>
+                            <li>只要有網路就能工作</li>
+                        </ul>
+                        <p style="margin-top: 15px;"><strong>Remote MCP Server</strong> 也是這種方式！</p>
+                    </div>
+                    <div class="concept-card" style="border: 3px solid #dc3545;">
+                        <h3>⚠️ Docker 容器</h3>
+                        <p><strong>範例：</strong>Local MCP Server</p>
+                        <ul>
+                            <li>需要 Docker Desktop</li>
+                            <li>服務必須啟動中</li>
+                            <li>設定較複雜</li>
+                        </ul>
+                        <p style="margin-top: 15px;">沒啟動 = 找不到連線</p>
+                    </div>
+                </div>
+
+                <div class="box danger">
+                    <h3>常見 Docker 錯誤</h3>
+                    <p><code>docker: failed to connect to the docker API ... The system cannot find the file specified.</code></p>
+                    <p><strong>白話解釋：</strong>你裝了電話機（Docker CLI），但沒接電話線（Docker Desktop 背景服務沒啟動）</p>
+                    <p><strong>解決：</strong>開啟 Docker Desktop，等右下角鯨魚圖示停止跳動後再試</p>
+                </div>
+
+                <div class="box success">
+                    <strong>建議：</strong>使用 <strong>Remote MCP Server</strong> 就不會遇到 Docker 問題！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 11: 常見問題 -->
         <div class="slide">
             <div class="content-card">
                 <h2>❓ 常見問題排解</h2>
