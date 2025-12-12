@@ -197,19 +197,18 @@
             border-radius: 15px;
             border: 3px solid #e9ecef;
             transition: all 0.3s;
-            cursor: pointer;
         }
         .method-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 30px rgba(0,0,0,0.15);
         }
-        .method-card.recommended {
-            border-color: #28a745;
-            background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%);
-        }
-        .method-card.backup {
-            border-color: #667eea;
+        .method-card.docker {
+            border-color: #0db7ed;
             background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+        }
+        .method-card.nodejs {
+            border-color: #68a063;
+            background: linear-gradient(135deg, #d4edda 0%, #f8f9fa 100%);
         }
     </style>
 </head>
@@ -238,7 +237,7 @@
                 </h2>
                 <div style="margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
                     <span class="feature-badge">✔ 兩種安裝方式</span>
-                    <span class="feature-badge">✔ 不用 Docker</span>
+                    <span class="feature-badge">✔ 擇一即可</span>
                     <span class="feature-badge">✔ Windows 可用</span>
                 </div>
             </div>
@@ -248,87 +247,220 @@
         <div class="slide">
             <div class="content-card">
                 <h2>🔧 選擇你的安裝方式</h2>
-                <p>GitHub MCP 有兩種安裝方式，選擇適合你的：</p>
+                <p>GitHub MCP 有兩種安裝方式，<strong>擇一即可</strong>：</p>
 
                 <div class="concept-grid">
-                    <div class="method-card recommended">
-                        <h3 style="color: #28a745;">⚡ 方法一：OAuth 一鍵安裝</h3>
-                        <p style="font-size: 24px; font-weight: bold; color: #155724;">最快！推薦！</p>
+                    <div class="method-card docker">
+                        <h3 style="color: #0db7ed;">🐳 方法一：Antigravity Install</h3>
+                        <p style="font-size: 20px; font-weight: bold; color: #0d47a1;">需要 Docker Desktop</p>
                         <ul>
-                            <li>不用建 Token</li>
-                            <li>不用裝 Node.js</li>
-                            <li>不用下指令</li>
-                            <li>幾秒鐘完成</li>
+                            <li>在 Antigravity 內操作</li>
+                            <li>需要 GitHub Token</li>
+                            <li>需要安裝 Docker Desktop</li>
+                            <li>Docker 必須啟動中</li>
                         </ul>
-                        <p style="margin-top: 15px;"><strong>適合：</strong>大多數使用者</p>
+                        <p style="margin-top: 15px;"><strong>適合：</strong>已經有裝 Docker 的人</p>
                     </div>
-                    <div class="method-card backup">
-                        <h3 style="color: #667eea;">🛠️ 方法二：CLI 版安裝</h3>
-                        <p style="font-size: 24px; font-weight: bold; color: #0d47a1;">備案！最穩定！</p>
+                    <div class="method-card nodejs">
+                        <h3 style="color: #68a063;">📦 方法二：CLI 版（Node.js）</h3>
+                        <p style="font-size: 20px; font-weight: bold; color: #155724;">不需要 Docker！</p>
                         <ul>
+                            <li>用終端機操作</li>
+                            <li>需要 GitHub Token</li>
                             <li>需要安裝 Node.js</li>
-                            <li>需要建立 Token</li>
-                            <li>步驟較多</li>
-                            <li>成功率最高</li>
+                            <li>不需要 Docker</li>
                         </ul>
-                        <p style="margin-top: 15px;"><strong>適合：</strong>OAuth 失敗時使用</p>
+                        <p style="margin-top: 15px;"><strong>適合：</strong>不想裝 Docker 的人</p>
                     </div>
                 </div>
 
                 <div class="box info">
-                    <strong>建議順序</strong><br>
-                    先試「方法一 OAuth」→ 如果失敗再用「方法二 CLI」
+                    <strong>兩種方法都需要 GitHub Token</strong><br>
+                    先學怎麼建立 Token，再選擇安裝方式
                 </div>
             </div>
         </div>
 
-        <!-- Slide 3: 方法一 OAuth 介紹 -->
+        <!-- Slide 3: 建立 GitHub Token -->
         <div class="slide">
             <div class="content-card">
-                <h2 style="color: #28a745;">⚡ 方法一：OAuth 一鍵安裝</h2>
-                <p style="font-size: 28px; text-align: center; margin: 30px 0;">只要 <strong>3 個步驟</strong>，幾秒鐘完成！</p>
+                <h2>🔑 第一步：建立 GitHub Token（兩種方法都要）</h2>
 
                 <div class="step-item">
                     <span class="step-number">1</span>
                     <div class="step-content">
-                        <h3>打開 Antigravity 的 MCP 設定</h3>
-                        <p>在 Antigravity 找到 MCP Servers，點選 <code>GitHub</code></p>
+                        <h3>進入 GitHub Token 頁面</h3>
+                        <p>GitHub → Settings → Developer Settings → Personal access tokens → <strong>Fine-grained tokens</strong></p>
+                        <p style="margin-top: 10px;">
+                            <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color: #667eea; font-weight: bold; font-size: 22px;">👉 點此直接前往</a>
+                        </p>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">2</span>
                     <div class="step-content">
-                        <h3>按下 Install 按鈕</h3>
-                        <p>瀏覽器會自動開啟，跳轉到 GitHub OAuth 授權頁面</p>
+                        <h3>點擊「Generate new token」</h3>
+                        <p>建立一個新的 Fine-grained token</p>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">3</span>
                     <div class="step-content">
-                        <h3>按 Authorize 授權</h3>
-                        <p>在 GitHub 頁面按下 <code>Authorize</code>，完成！</p>
+                        <h3>填寫 Token 資訊</h3>
+                        <table class="tool-table">
+                            <tr><th>欄位</th><th>填入值</th></tr>
+                            <tr><td>Token name</td><td>取一個名字，例如：<code>MCP-Token</code></td></tr>
+                            <tr><td>Expiration</td><td>選擇有效期限（建議 90 天或更長）</td></tr>
+                            <tr><td>Repository access</td><td><strong>All repositories</strong></td></tr>
+                        </table>
                     </div>
-                </div>
-
-                <div class="box success">
-                    <strong>成功！</strong><br>
-                    回到 Antigravity，你會看到 GitHub Tools 列表出現<br>
-                    👉 不需要建立 Token，不需要下任何指令！
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: OAuth 成功畫面 -->
+        <!-- Slide 4: Token 權限設定 -->
         <div class="slide">
             <div class="content-card">
-                <h2 style="color: #28a745;">✅ OAuth 成功後你會看到...</h2>
+                <h2>🔑 Token 權限設定</h2>
+
+                <div class="step-item">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h3>設定 Permissions（權限）</h3>
+                        <p>展開「Repository permissions」，設定以下權限：</p>
+                        <table class="tool-table">
+                            <tr><th>權限項目</th><th>設定值</th><th>用途</th></tr>
+                            <tr><td><strong>Contents</strong></td><td>Read and write</td><td>讀寫檔案、push/pull</td></tr>
+                            <tr><td><strong>Metadata</strong></td><td>Read-only（自動）</td><td>讀取 Repo 資訊</td></tr>
+                        </table>
+                        <p style="margin-top: 15px;">如果需要更多功能，可加選：</p>
+                        <table class="tool-table">
+                            <tr><td>Issues</td><td>Read and write</td><td>管理 Issue</td></tr>
+                            <tr><td>Pull requests</td><td>Read and write</td><td>管理 PR</td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h3>按「Generate token」產生 Token</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: 複製 Token -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔑 複製你的 Token</h2>
+
+                <div class="step-item">
+                    <span class="step-number">6</span>
+                    <div class="step-content">
+                        <h3>立即複製 Token！</h3>
+                        <p>Token 格式類似：</p>
+                        <pre>github_pat_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</pre>
+                        <p>或舊版格式：<code>ghp_xxxxx...</code></p>
+                    </div>
+                </div>
+
+                <div class="box danger">
+                    <strong>超級重要！</strong><br>
+                    Token 只會顯示這一次！離開頁面就看不到了！<br>
+                    請立即複製並貼到安全的地方保存！
+                </div>
+
+                <div class="box success">
+                    <strong>Token 建立完成！</strong><br>
+                    接下來選擇安裝方式：<br>
+                    • 方法一：Antigravity Install（需要 Docker）<br>
+                    • 方法二：CLI 版（需要 Node.js，不用 Docker）
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 方法一介紹 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #0db7ed;">🐳 方法一：Antigravity Install</h2>
+                <p style="font-size: 24px; text-align: center; margin: 20px 0;">在 Antigravity 內直接安裝（需要 Docker Desktop）</p>
+
+                <div class="box warning">
+                    <strong>前置條件</strong><br>
+                    • 已安裝 <a href="https://www.docker.com/products/docker-desktop/" target="_blank" style="color: #856404;">Docker Desktop</a><br>
+                    • Docker Desktop 必須<strong>啟動中</strong>（右下角有鯨魚圖示）
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>確認 Docker Desktop 已啟動</h3>
+                        <p>看到右下角有 🐳 鯨魚圖示，且沒有在轉圈圈</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>打開 Antigravity</h3>
+                        <p>進入 MCP Servers 設定頁面</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 方法一步驟 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #0db7ed;">🐳 方法一：Antigravity Install（續）</h2>
+
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h3>找到 GitHub MCP，點擊「Install」</h3>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h3>貼入你的 GitHub Token</h3>
+                        <p>會出現提示：<code>To configure the GitHub MCP server, add the required inputs below.</code></p>
+                        <p>把剛剛複製的 Token 貼進去</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h3>按下確認，等待安裝</h3>
+                    </div>
+                </div>
+
+                <div class="box danger">
+                    <h3>如果出現 Docker 錯誤？</h3>
+                    <p><code>docker: failed to connect to the docker API...</code></p>
+                    <p><strong>解決：</strong>啟動 Docker Desktop，等鯨魚圖示停止跳動，再按 <strong>Refresh</strong></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 方法一成功 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #0db7ed;">🐳 方法一：安裝成功！</h2>
+
+                <div class="box success" style="font-size: 24px; text-align: center;">
+                    <strong>看到 GitHub MCP 的 Tools 列表 = 成功！</strong>
+                </div>
 
                 <div class="concept-grid">
                     <div class="concept-card">
                         <h3>📂 list_repositories</h3>
-                        <p>列出你的所有 Repository</p>
+                        <p>列出所有 Repository</p>
                     </div>
                     <div class="concept-card">
                         <h3>📄 create_file</h3>
@@ -336,111 +468,57 @@
                     </div>
                     <div class="concept-card">
                         <h3>✏️ update_file</h3>
-                        <p>更新檔案內容</p>
+                        <p>更新檔案</p>
                     </div>
                     <div class="concept-card">
                         <h3>🔀 create_pull_request</h3>
-                        <p>建立 Pull Request</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>🐛 create_issue</h3>
-                        <p>建立 Issue</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>👤 get_me</h3>
-                        <p>取得個人資訊</p>
-                    </div>
-                </div>
-
-                <div class="box success" style="text-align: center; font-size: 24px;">
-                    <strong>恭喜！GitHub MCP 設定完成！</strong><br>
-                    如果成功，可以直接跳到最後的「AI 可以幫你做什麼」
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 5: OAuth 失敗怎麼辦 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>❓ OAuth 失敗怎麼辦？</h2>
-
-                <div class="box warning">
-                    <h3>常見 OAuth 問題</h3>
-                    <ul>
-                        <li>瀏覽器沒有跳出授權頁面</li>
-                        <li>授權後 Antigravity 沒反應</li>
-                        <li>Tools 列表是空的</li>
-                    </ul>
-                </div>
-
-                <div class="box info" style="font-size: 24px; text-align: center;">
-                    <strong>沒關係！使用「方法二：CLI 版安裝」</strong><br>
-                    步驟多一點，但成功率最高！
-                </div>
-
-                <p style="text-align: center; margin-top: 30px; font-size: 24px;">
-                    👇 接下來教你 CLI 版安裝方式 👇
-                </p>
-            </div>
-        </div>
-
-        <!-- Slide 6: 方法二 CLI 介紹 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2 style="color: #667eea;">🛠️ 方法二：CLI 版安裝（7 步驟）</h2>
-                <p>如果 OAuth 失敗，使用這個方法：</p>
-
-                <div class="concept-grid">
-                    <div class="concept-card">
-                        <h3>Step 1</h3>
-                        <p>安裝 Node.js</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 2</h3>
-                        <p>建立資料夾</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 3</h3>
-                        <p>安裝 MCP 套件</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 4</h3>
-                        <p>建立 GitHub Token</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 5</h3>
-                        <p>啟動 MCP Server</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 6</h3>
-                        <p>Antigravity 連線</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>Step 7</h3>
-                        <p>看到 Tools = 成功！</p>
+                        <p>建立 PR</p>
                     </div>
                 </div>
 
                 <div class="box info">
-                    <strong>優點</strong><br>
-                    ✔ 不用 Docker ✔ Windows 可用 ✔ 成功率最高 ✔ 不容易卡住
+                    <strong>方法一完成！</strong><br>
+                    如果成功，可以跳到「AI 可以幫你做什麼」那一頁<br>
+                    如果失敗或不想裝 Docker，請看「方法二：CLI 版」
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: CLI Step 1 安裝 Node.js -->
+        <!-- Slide 9: 方法二介紹 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🟥 CLI Step 1：安裝 Node.js</h2>
+                <h2 style="color: #68a063;">📦 方法二：CLI 版（Node.js）</h2>
+                <p style="font-size: 24px; text-align: center; margin: 20px 0;">不需要 Docker！用 Node.js 啟動 MCP Server</p>
+
+                <div class="box success">
+                    <strong>優點</strong><br>
+                    ✔ 不需要 Docker<br>
+                    ✔ Windows 完全支援<br>
+                    ✔ 成功率高<br>
+                    ✔ 適合不想裝 Docker 的人
+                </div>
+
+                <div class="box warning">
+                    <strong>需要安裝</strong><br>
+                    • Node.js（從 <a href="https://nodejs.org/" target="_blank" style="color: #856404;">nodejs.org</a> 下載 LTS 版）
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: CLI Step 1 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #68a063;">📦 CLI Step 1：安裝 Node.js</h2>
 
                 <div class="step-item">
                     <span class="step-number">1</span>
                     <div class="step-content">
                         <h3>下載 Node.js LTS 版本</h3>
                         <p style="font-size: 24px; margin: 20px 0;">
-                            <a href="https://nodejs.org/" target="_blank" style="color: #667eea; font-weight: bold;">👉 https://nodejs.org/</a>
+                            <a href="https://nodejs.org/" target="_blank" style="color: #68a063; font-weight: bold;">👉 https://nodejs.org/</a>
                         </p>
                         <p>選擇 <strong>LTS（長期支援版）</strong>，下載後執行安裝</p>
+                        <p>安裝時記得勾選 <strong>Add to PATH</strong></p>
                     </div>
                 </div>
 
@@ -456,92 +534,57 @@ npm -v</pre>
 
                 <div class="box success">
                     <strong>預期結果</strong><br>
-                    <code>node -v</code> → 顯示 <code>v20.x.x</code><br>
-                    <code>npm -v</code> → 顯示 <code>10.x.x</code>
+                    <code>node -v</code> → 顯示 <code>v20.x.x</code> 或更高<br>
+                    <code>npm -v</code> → 顯示 <code>10.x.x</code> 或更高
                 </div>
             </div>
         </div>
 
-        <!-- Slide 8: CLI Step 2-3 建立資料夾 & 安裝套件 -->
+        <!-- Slide 11: CLI Step 2-3 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🟥 CLI Step 2-3：建立資料夾 & 安裝套件</h2>
+                <h2 style="color: #68a063;">📦 CLI Step 2-3：建立資料夾 & 安裝套件</h2>
 
                 <div class="step-item">
-                    <span class="step-number">2</span>
+                    <span class="step-number">3</span>
                     <div class="step-content">
                         <h3>建立資料夾</h3>
                         <pre>mkdir github-mcp
 cd github-mcp</pre>
+                        <p>（資料夾名稱可以自訂，建議用英文）</p>
                     </div>
                 </div>
 
                 <div class="step-item">
-                    <span class="step-number">3</span>
+                    <span class="step-number">4</span>
                     <div class="step-content">
                         <h3>安裝 GitHub MCP 套件</h3>
                         <pre>npm install -g @modelcontextprotocol/github-mcp</pre>
-                        <p>檢查是否安裝成功：</p>
-                        <pre>npx github-mcp --help</pre>
                     </div>
                 </div>
-
-                <div class="box info">
-                    <strong>看到 help 說明 = 安裝成功！</strong>
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 9: CLI Step 4 建立 Token -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🟥 CLI Step 4：建立 GitHub Token</h2>
-
-                <div class="step-item">
-                    <span class="step-number">1</span>
-                    <div class="step-content">
-                        <h3>進入 GitHub Token 頁面</h3>
-                        <p><a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color: #667eea; font-weight: bold; font-size: 20px;">👉 點此前往 Fine-grained tokens</a></p>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <span class="step-number">2</span>
-                    <div class="step-content">
-                        <h3>設定 Token 權限</h3>
-                        <table class="tool-table">
-                            <tr><th>權限項目</th><th>設定值</th></tr>
-                            <tr><td>Repository access</td><td>All repositories</td></tr>
-                            <tr><td>Metadata</td><td>Read</td></tr>
-                            <tr><td>Contents</td><td>Read & Write</td></tr>
-                        </table>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <span class="step-number">3</span>
-                    <div class="step-content">
-                        <h3>複製 Token</h3>
-                        <p>格式類似：<code>ghp_xxxxx...</code></p>
-                    </div>
-                </div>
-
-                <div class="box danger">
-                    <strong>重要！</strong> Token 只顯示一次，請立即複製！
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 10: CLI Step 5-6 啟動 & 連線 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🟥 CLI Step 5-6：啟動 Server & 連線</h2>
 
                 <div class="step-item">
                     <span class="step-number">5</span>
                     <div class="step-content">
+                        <h3>檢查是否安裝成功</h3>
+                        <pre>npx github-mcp --help</pre>
+                        <p>看到指令說明 = 安裝成功！</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: CLI Step 4-5 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #68a063;">📦 CLI Step 4-5：啟動 Server & 連線</h2>
+
+                <div class="step-item">
+                    <span class="step-number">6</span>
+                    <div class="step-content">
                         <h3>啟動 GitHub MCP Server</h3>
                         <pre>npx github-mcp start --token="你的Token"</pre>
+                        <p>把 <code>你的Token</code> 換成剛剛複製的 GitHub Token</p>
                         <p>成功會顯示：</p>
                         <pre style="background: #155724;">GitHub MCP Server running on http://localhost:3000
 Loaded tools: listRepos, createFile, updateFile...</pre>
@@ -549,10 +592,10 @@ Loaded tools: listRepos, createFile, updateFile...</pre>
                 </div>
 
                 <div class="step-item">
-                    <span class="step-number">6</span>
+                    <span class="step-number">7</span>
                     <div class="step-content">
                         <h3>在 Antigravity 連線</h3>
-                        <p>Add MCP Server → Connect to Running Server</p>
+                        <p>Add MCP Server → <strong>Connect to Running Server</strong></p>
                         <table class="tool-table">
                             <tr><th>欄位</th><th>填入值</th></tr>
                             <tr><td>Host</td><td><code>localhost</code></td></tr>
@@ -560,13 +603,21 @@ Loaded tools: listRepos, createFile, updateFile...</pre>
                         </table>
                     </div>
                 </div>
+
+                <div class="box info">
+                    <strong>注意！</strong>終端機視窗不要關閉，Server 需要持續運行
+                </div>
             </div>
         </div>
 
-        <!-- Slide 11: CLI Step 7 成功 -->
+        <!-- Slide 13: CLI 成功 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🟥 CLI Step 7：看到 Tools = 成功！</h2>
+                <h2 style="color: #68a063;">📦 CLI 版：安裝成功！</h2>
+
+                <div class="box success" style="font-size: 24px; text-align: center;">
+                    <strong>看到 Tools 列表 = 成功！</strong>
+                </div>
 
                 <div class="concept-grid">
                     <div class="concept-card">
@@ -591,13 +642,13 @@ Loaded tools: listRepos, createFile, updateFile...</pre>
                     </div>
                 </div>
 
-                <div class="box success" style="text-align: center; font-size: 24px;">
+                <div class="box success">
                     <strong>恭喜！GitHub MCP 設定完成！</strong>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 12: AI 可以做什麼 -->
+        <!-- Slide 14: AI 可以做什麼 -->
         <div class="slide">
             <div class="content-card">
                 <h2>🚀 從現在起，AI 可以幫你...</h2>
@@ -627,51 +678,57 @@ Loaded tools: listRepos, createFile, updateFile...</pre>
             </div>
         </div>
 
-        <!-- Slide 13: 常見問題 -->
+        <!-- Slide 15: 常見問題 -->
         <div class="slide">
             <div class="content-card">
                 <h2>❓ 常見問題排解</h2>
 
                 <div class="box danger">
-                    <h3>npm / node 找不到</h3>
-                    <p><strong>解決：</strong>重新安裝 Node.js，記得勾選「Add to PATH」</p>
+                    <h3>方法一：Docker 錯誤</h3>
+                    <p><code>docker: failed to connect to the docker API...</code></p>
+                    <p><strong>解決：</strong>啟動 Docker Desktop，等鯨魚圖示停止跳動，按 Refresh</p>
                 </div>
 
                 <div class="box warning">
+                    <h3>方法二：npm / node 找不到</h3>
+                    <p><strong>解決：</strong>重新安裝 Node.js，記得勾選「Add to PATH」</p>
+                </div>
+
+                <div class="box info">
                     <h3>Token 無效 / Unauthorized</h3>
                     <p><strong>解決：</strong>重新建立 Token，確認有 Contents (Read & Write) 權限</p>
                 </div>
 
-                <div class="box info">
-                    <h3>Port 3000 被佔用</h3>
-                    <p><strong>解決：</strong><code>npx github-mcp start --token="xxx" --port=3001</code></p>
-                </div>
-
                 <div class="box warning">
-                    <h3>Antigravity 連不上</h3>
-                    <p><strong>解決：</strong>確認終端機顯示 "Server running on localhost:3000"</p>
+                    <h3>方法二：Port 3000 被佔用</h3>
+                    <p><strong>解決：</strong><code>npx github-mcp start --token="xxx" --port=3001</code></p>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 14: 總結 -->
+        <!-- Slide 16: 總結 -->
         <div class="slide">
             <div class="content-card">
                 <h2>📋 安裝方式總整理</h2>
 
                 <table class="tool-table">
-                    <tr><th>方法</th><th>步驟</th><th>適合誰</th></tr>
+                    <tr><th>方法</th><th>需要</th><th>步驟</th></tr>
                     <tr>
-                        <td><strong style="color: #28a745;">方法一：OAuth</strong></td>
-                        <td>Install → Authorize → 完成</td>
-                        <td>大多數人（推薦先試）</td>
+                        <td><strong style="color: #0db7ed;">🐳 方法一：Antigravity Install</strong></td>
+                        <td>Docker Desktop</td>
+                        <td>Install → 貼 Token → 完成</td>
                     </tr>
                     <tr>
-                        <td><strong style="color: #667eea;">方法二：CLI</strong></td>
-                        <td>Node.js → npm install → Token → 啟動</td>
-                        <td>OAuth 失敗時的備案</td>
+                        <td><strong style="color: #68a063;">📦 方法二：CLI 版</strong></td>
+                        <td>Node.js</td>
+                        <td>npm install → 啟動 Server → 連線</td>
                     </tr>
                 </table>
+
+                <div class="box info">
+                    <strong>兩種方法都需要 GitHub Token！</strong><br>
+                    擇一使用即可，效果一樣
+                </div>
 
                 <div class="box success" style="text-align: center; margin-top: 30px;">
                     <h3>GitHub MCP 設定完成！</h3>
