@@ -135,7 +135,7 @@
         h3 { color: #667eea; font-size: 26px; margin: 30px 0 15px 0; }
         p, li { font-size: 20px; line-height: 1.8; color: #444; margin-bottom: 15px; }
         code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
-        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 15px; line-height: 1.6; font-family: monospace; }
+        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 16px; line-height: 1.6; font-family: monospace; }
         .box { padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; font-size: 20px; }
         .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
         .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
@@ -162,6 +162,7 @@
             border-radius: 50%;
             font-weight: bold;
             margin-right: 15px;
+            flex-shrink: 0;
         }
 
         .step-item {
@@ -179,6 +180,16 @@
         .tool-table th, .tool-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
         .tool-table th { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
         .tool-table tr:hover { background: #f8f9fa; }
+
+        .feature-badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin: 5px;
+        }
     </style>
 </head>
 <body>
@@ -202,146 +213,165 @@
                 <h4 style="color: #667eea; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google Antigravity MCP 架設</h4>
                 <h1>Part 4: GitHub MCP 設定</h1>
                 <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
-                    讓 AI 助手直接管理你的 GitHub 倉庫、Issue 和 Pull Request
+                    CLI 版完整安裝教學 - 最穩定版本
                 </h2>
-                <div style="margin-top: 40px; display: flex; gap: 20px;">
-                    <span class="highlight">Remote MCP（推薦）</span>
-                    <span class="highlight">GitHub CLI</span>
-                    <span class="highlight">100+ 工具</span>
+                <div style="margin-top: 40px; display: flex; gap: 15px; flex-wrap: wrap; justify-content: center;">
+                    <span class="feature-badge">✔ 不用 Docker</span>
+                    <span class="feature-badge">✔ Windows 可用</span>
+                    <span class="feature-badge">✔ 成功率最高</span>
+                    <span class="feature-badge">✔ 不容易卡住</span>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 2: GitHub MCP 功能 -->
+        <!-- Slide 2: 為什麼選 CLI 版 -->
         <div class="slide">
             <div class="content-card">
-                <h2>🐙 GitHub MCP Server 功能</h2>
-                <p>GitHub MCP Server 讓 AI 可以直接操作 GitHub 平台，包含以下功能：</p>
-
-                <div class="concept-grid">
-                    <div class="concept-card">
-                        <h3>📁 Repository 管理</h3>
-                        <p>瀏覽、搜尋程式碼，分析 commits，理解專案結構。</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>🐛 Issue 管理</h3>
-                        <p>建立、更新、管理 Issues，自動分類 bug、標籤管理。</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>🔀 Pull Request</h3>
-                        <p>建立 PR、審查程式碼變更、合併分支。</p>
-                    </div>
-                    <div class="concept-card">
-                        <h3>⚡ GitHub Actions</h3>
-                        <p>監控 workflow 執行狀態、分析建置失敗原因。</p>
-                    </div>
-                </div>
-
-                <div class="box info">
-                    <strong>超過 100 個工具！</strong><br>
-                    GitHub MCP 提供完整的 API 工具，幾乎涵蓋所有 GitHub 操作。
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 3: 安裝方式選擇 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🔧 推薦安裝方式：Remote MCP Server</h2>
-                <p>GitHub MCP 最簡單的安裝方式是使用 Remote MCP Server：</p>
+                <h2>🎯 為什麼選擇 CLI 版？</h2>
+                <p>GitHub MCP 有多種安裝方式，但 <strong>CLI 版</strong> 是最穩定的：</p>
 
                 <div class="concept-grid">
                     <div class="concept-card" style="border: 3px solid #28a745;">
-                        <h3>✅ Remote MCP Server（推薦）</h3>
-                        <p><strong>優點：</strong></p>
+                        <h3>✅ CLI 版（推薦）</h3>
                         <ul>
                             <li>不需要 Docker</li>
-                            <li>不需要 Node.js</li>
-                            <li>支援 OAuth 一鍵授權</li>
-                            <li>由 GitHub 託管維護</li>
-                            <li>設定簡單，幾分鐘完成</li>
+                            <li>Windows 完全支援</li>
+                            <li>成功率最高</li>
+                            <li>學生最不容易卡住</li>
+                            <li>Antigravity 可直接讀到 Tools</li>
                         </ul>
-                        <p><strong>適合：</strong>所有使用者</p>
                     </div>
-                    <div class="concept-card" style="border: 3px solid #667eea;">
-                        <h3>💻 搭配 GitHub CLI</h3>
-                        <p><strong>優點：</strong></p>
+                    <div class="concept-card" style="border: 3px solid #dc3545;">
+                        <h3>❌ Docker 版（不推薦）</h3>
                         <ul>
-                            <li>命令列操作更方便</li>
-                            <li>可快速建立/管理 Repo</li>
-                            <li>支援 OAuth 登入</li>
-                            <li>與 MCP 完美搭配</li>
+                            <li>需要安裝 Docker Desktop</li>
+                            <li>常遇到連線錯誤</li>
+                            <li>Windows 容易出問題</li>
+                            <li>設定複雜</li>
                         </ul>
-                        <p><strong>指令：</strong><code>gh repo create</code></p>
                     </div>
                 </div>
 
                 <div class="box success">
-                    <strong>建議</strong><br>
-                    使用 <strong>Remote MCP Server</strong> + <strong>GitHub CLI</strong> 組合，<br>
-                    不需要 Docker，設定最簡單！
+                    <strong>本教學使用 CLI 版</strong><br>
+                    只需要 Node.js + npm，幾分鐘就能完成設定！
                 </div>
             </div>
         </div>
 
-        <!-- Slide 4: Remote MCP - OAuth 安裝 -->
+        <!-- Slide 3: Step 1 安裝 Node.js -->
         <div class="slide">
             <div class="content-card">
-                <h2>🚀 Remote MCP：OAuth 一鍵安裝（最簡單）</h2>
+                <h2>🟥 第 1 步：安裝 Node.js（必須）</h2>
 
                 <div class="step-item">
                     <span class="step-number">1</span>
                     <div class="step-content">
-                        <h3>打開 Antigravity 的 MCP 設定</h3>
-                        <p>在 Antigravity 右側找到 MCP Servers，點選 <code>GitHub</code></p>
+                        <h3>下載 Node.js LTS 版本</h3>
+                        <p>前往官方網站下載：</p>
+                        <p style="font-size: 24px; margin: 20px 0;">
+                            <a href="https://nodejs.org/" target="_blank" style="color: #667eea; font-weight: bold;">👉 https://nodejs.org/</a>
+                        </p>
+                        <p>選擇 <strong>LTS（長期支援版）</strong>，下載後執行安裝程式</p>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">2</span>
                     <div class="step-content">
-                        <h3>按下 Install 按鈕</h3>
-                        <p>Antigravity 會開啟瀏覽器，跳轉到 GitHub OAuth 授權頁面</p>
+                        <h3>安裝完成後測試</h3>
+                        <p>打開終端機（PowerShell 或 CMD），輸入：</p>
+                        <pre>node -v
+npm -v</pre>
+                        <p>如果顯示版本號碼，代表安裝成功！</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>預期結果</strong><br>
+                    <code>node -v</code> → 顯示類似 <code>v20.x.x</code><br>
+                    <code>npm -v</code> → 顯示類似 <code>10.x.x</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Step 2 建立資料夾 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🟥 第 2 步：建立專案資料夾</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>建立一個資料夾（例如：github-mcp）</h3>
+                        <pre>mkdir github-mcp
+cd github-mcp</pre>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    <strong>小提醒</strong><br>
+                    資料夾名稱可以自訂，但建議使用英文，避免中文路徑問題
+                </div>
+
+                <div class="box info">
+                    <strong>你也可以用檔案總管</strong><br>
+                    直接在你想要的位置新增資料夾，然後在該資料夾內開啟終端機
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: Step 3 安裝套件 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🟥 第 3 步：安裝 GitHub MCP 套件</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>全域安裝（推薦）</h3>
+                        <p>在終端機輸入：</p>
+                        <pre>npm install -g @modelcontextprotocol/github-mcp</pre>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>或本地安裝（在專案資料夾內）</h3>
+                        <pre>npm install @modelcontextprotocol/github-mcp</pre>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">3</span>
                     <div class="step-content">
-                        <h3>授權 GitHub MCP Server</h3>
-                        <p>在 GitHub 頁面按下 <code>Authorize</code> 授權</p>
-                    </div>
-                </div>
-
-                <div class="step-item">
-                    <span class="step-number">4</span>
-                    <div class="step-content">
-                        <h3>完成！</h3>
-                        <p>授權完成後，你會看到 Tools 列表出現，代表安裝成功！</p>
+                        <h3>檢查是否安裝成功</h3>
+                        <pre>npx github-mcp --help</pre>
+                        <p>看到指令說明代表安裝成功！</p>
                     </div>
                 </div>
 
                 <div class="box success">
-                    <strong>成功標誌</strong><br>
-                    ✔ GitHub MCP 已安裝<br>
-                    ✔ Tools 列表可以展開<br>
-                    ✔ 可以呼叫 github.* 工具
+                    <strong>安裝成功！</strong><br>
+                    如果看到 help 說明，就可以進入下一步了
                 </div>
             </div>
         </div>
 
-        <!-- Slide 5: Remote MCP - PAT 設定 -->
+        <!-- Slide 6: Step 4 準備 Token -->
         <div class="slide">
             <div class="content-card">
-                <h2>🔑 Remote MCP：使用 PAT Token 設定</h2>
-                <p>如果 OAuth 授權失敗，可以手動設定 Personal Access Token：</p>
+                <h2>🟥 第 4 步：準備 GitHub Token（PAT）</h2>
 
                 <div class="step-item">
                     <span class="step-number">1</span>
                     <div class="step-content">
-                        <h3>建立 GitHub PAT Token</h3>
-                        <p>前往：<a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color: #667eea;">https://github.com/settings/tokens?type=beta</a></p>
-                        <p>建立 <code>Fine-grained token</code></p>
+                        <h3>進入 GitHub Token 設定頁面</h3>
+                        <p>GitHub → Settings → Developer Settings → Personal access tokens → <strong>Fine-grained tokens</strong></p>
+                        <p style="margin-top: 10px;">
+                            <a href="https://github.com/settings/tokens?type=beta" target="_blank" style="color: #667eea; font-weight: bold;">👉 直接點此前往</a>
+                        </p>
                     </div>
                 </div>
 
@@ -350,10 +380,10 @@
                     <div class="step-content">
                         <h3>設定 Token 權限</h3>
                         <table class="tool-table">
-                            <tr><th>權限</th><th>設定值</th><th>說明</th></tr>
-                            <tr><td>Repository access</td><td>All repositories</td><td>讓 MCP 存取所有 Repo</td></tr>
-                            <tr><td>Contents</td><td>Read and write</td><td>讀寫 Repo 內容</td></tr>
-                            <tr><td>Metadata</td><td>Read-only</td><td>讀取 Repo 資訊（必要）</td></tr>
+                            <tr><th>權限項目</th><th>設定值</th></tr>
+                            <tr><td>Repository access</td><td>All repositories</td></tr>
+                            <tr><td>Metadata</td><td>Read</td></tr>
+                            <tr><td>Contents</td><td>Read & Write</td></tr>
                         </table>
                     </div>
                 </div>
@@ -361,185 +391,167 @@
                 <div class="step-item">
                     <span class="step-number">3</span>
                     <div class="step-content">
-                        <h3>設定 MCP Configuration</h3>
-                        <pre>{
-  "servers": {
-    "github": {
-      "type": "http",
-      "url": "https://api.githubcopilot.com/mcp/",
-      "headers": {
-        "Authorization": "Bearer YOUR_GITHUB_PAT"
-      }
-    }
-  }
-}</pre>
+                        <h3>複製你的 Token</h3>
+                        <p>Token 格式類似：<code>ghp_xxxxx...</code></p>
                     </div>
+                </div>
+
+                <div class="box danger">
+                    <strong>重要！</strong><br>
+                    Token 只會顯示一次，請立即複製並妥善保存！
                 </div>
             </div>
         </div>
 
-        <!-- Slide 6: GitHub CLI 安裝與使用 -->
+        <!-- Slide 7: Step 5 啟動 Server -->
         <div class="slide">
             <div class="content-card">
-                <h2>💻 GitHub CLI 安裝與使用</h2>
-                <p>GitHub CLI 讓你可以在命令列快速操作 GitHub，與 MCP 完美搭配：</p>
+                <h2>🟥 第 5 步：啟動 GitHub MCP Server</h2>
 
                 <div class="step-item">
                     <span class="step-number">1</span>
                     <div class="step-content">
-                        <h3>安裝 GitHub CLI</h3>
-                        <p>Windows 使用 winget：</p>
-                        <pre>winget install --id GitHub.cli</pre>
-                        <p>或從官網下載：<a href="https://cli.github.com/" target="_blank" style="color: #667eea;">https://cli.github.com/</a></p>
+                        <h3>在專案資料夾輸入啟動指令</h3>
+                        <pre>npx github-mcp start --token="你的 GitHub Token"</pre>
+                        <p>把 <code>你的 GitHub Token</code> 換成剛剛複製的 Token</p>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    <strong>成功畫面</strong><br>
+                    如果成功會出現：
+                    <pre style="background: #155724; margin-top: 15px;">GitHub MCP Server running on http://localhost:3000
+Loaded tools:
+ - listRepos
+ - createFile
+ - updateFile
+ - deleteFile
+ - getUser</pre>
+                </div>
+
+                <div class="box info">
+                    <strong>這時候 MCP 已經啟動了！</strong><br>
+                    Server 會持續運行，不要關閉這個終端機視窗
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Step 6 連線 Antigravity -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🟥 第 6 步：在 Antigravity 連線 MCP Server</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>打開 Antigravity</h3>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">2</span>
                     <div class="step-content">
-                        <h3>登入 GitHub</h3>
-                        <pre>gh auth login</pre>
-                        <p>選擇 <code>GitHub.com</code> → <code>HTTPS</code> → <code>Login with a web browser</code></p>
+                        <h3>Open Agent Manager</h3>
                     </div>
                 </div>
 
                 <div class="step-item">
                     <span class="step-number">3</span>
                     <div class="step-content">
-                        <h3>常用指令</h3>
-                        <pre># 建立新倉庫
-gh repo create my-repo --public
-
-# 從本地資料夾建立並推送
-gh repo create my-repo --public --source=. --push
-
-# 查看倉庫狀態
-gh repo view</pre>
+                        <h3>找到「Add MCP Server」</h3>
                     </div>
                 </div>
 
-                <div class="box success">
-                    <strong>推薦組合</strong><br>
-                    Remote MCP Server + GitHub CLI = 最簡單的 GitHub 開發環境！
+                <div class="step-item">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h3>選：Connect to Running Server</h3>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h3>填入連線資訊</h3>
+                        <table class="tool-table">
+                            <tr><th>欄位</th><th>填入值</th></tr>
+                            <tr><td>Host</td><td><code>localhost</code></td></tr>
+                            <tr><td>Port</td><td><code>3000</code></td></tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">6</span>
+                    <div class="step-content">
+                        <h3>按 Connect ✔</h3>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Slide 7: PAT Token 權限說明 -->
+        <!-- Slide 9: Step 7 成功畫面 -->
         <div class="slide">
             <div class="content-card">
-                <h2>⚙️ PAT Token 權限詳解</h2>
-                <p>根據你的需求選擇適當的權限：</p>
+                <h2>🟥 第 7 步：看到 Tools 列表 = 成功！</h2>
 
-                <h3>最小權限（推薦）</h3>
-                <table class="tool-table">
-                    <tr><th>權限</th><th>設定值</th><th>用途</th></tr>
-                    <tr><td>Contents</td><td>Read and write</td><td>push/pull、讀寫檔案</td></tr>
-                    <tr><td>Metadata</td><td>Read-only（自動）</td><td>查詢 Repo 資訊</td></tr>
-                </table>
-
-                <h3>完整功能權限</h3>
-                <table class="tool-table">
-                    <tr><th>權限</th><th>設定值</th><th>用途</th></tr>
-                    <tr><td>Contents</td><td>Read and write</td><td>讀寫程式碼</td></tr>
-                    <tr><td>Issues</td><td>Read and write</td><td>管理 Issues</td></tr>
-                    <tr><td>Pull requests</td><td>Read and write</td><td>管理 PR</td></tr>
-                    <tr><td>Actions</td><td>Read-only</td><td>監控 CI/CD</td></tr>
-                </table>
-
-                <div class="box info">
-                    <strong>安全建議</strong><br>
-                    • 只給必要的權限<br>
-                    • Token 到期後記得更新<br>
-                    • 不要把 Token 提交到 GitHub
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 8: 測試 GitHub MCP -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🧪 測試 GitHub MCP</h2>
-                <p>安裝成功後，在 Antigravity 輸入以下指令測試：</p>
-
-                <h3>測試 1：查看個人資訊</h3>
-                <pre>github.get_me</pre>
-                <p>回傳你的 GitHub 帳號資訊</p>
-
-                <h3>測試 2：搜尋倉庫</h3>
-                <pre>幫我搜尋我的 GitHub repositories</pre>
-                <p>AI 會使用 search_repositories 工具</p>
-
-                <h3>測試 3：讀取檔案</h3>
-                <pre>讀取 owner/repo 的 README.md 內容</pre>
-                <p>AI 會使用 get_file_contents 工具</p>
-
-                <div class="box success">
-                    <strong>成功！</strong><br>
-                    如果以上測試都能正常回傳結果，你的 GitHub MCP 就設定完成了！
-                </div>
-            </div>
-        </div>
-
-        <!-- Slide 9: 常用工具列表 -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🛠️ GitHub MCP 常用工具</h2>
-
-                <table class="tool-table">
-                    <tr><th>工具名稱</th><th>功能說明</th></tr>
-                    <tr><td><code>get_me</code></td><td>取得當前使用者資訊</td></tr>
-                    <tr><td><code>search_repositories</code></td><td>搜尋倉庫</td></tr>
-                    <tr><td><code>get_file_contents</code></td><td>取得檔案內容</td></tr>
-                    <tr><td><code>create_or_update_file</code></td><td>建立或更新檔案</td></tr>
-                    <tr><td><code>list_issues</code></td><td>列出 Issues</td></tr>
-                    <tr><td><code>issue_write</code></td><td>建立/更新 Issue</td></tr>
-                    <tr><td><code>create_pull_request</code></td><td>建立 Pull Request</td></tr>
-                    <tr><td><code>list_workflow_runs</code></td><td>列出 GitHub Actions 執行紀錄</td></tr>
-                    <tr><td><code>create_branch</code></td><td>建立新分支</td></tr>
-                    <tr><td><code>push_files</code></td><td>Push 多個檔案</td></tr>
-                </table>
-            </div>
-        </div>
-
-        <!-- Slide 10: 原生工具 vs Docker -->
-        <div class="slide">
-            <div class="content-card">
-                <h2>🤔 為什麼有些操作成功、有些失敗？</h2>
-                <p>這取決於使用的<strong>底層技術</strong>不同：</p>
+                <p>連線成功後，你會看到 GitHub 的 Tools 全部出現：</p>
 
                 <div class="concept-grid">
-                    <div class="concept-card" style="border: 3px solid #28a745;">
-                        <h3>✅ 原生工具（推薦）</h3>
-                        <p><strong>範例：</strong>git.exe、gh.exe</p>
-                        <ul>
-                            <li>直接在 Windows 運行</li>
-                            <li>不需要虛擬環境</li>
-                            <li>只要有網路就能工作</li>
-                        </ul>
-                        <p style="margin-top: 15px;"><strong>Remote MCP Server</strong> 也是這種方式！</p>
+                    <div class="concept-card">
+                        <h3>📂 listRepos</h3>
+                        <p>列出你的所有 Repository</p>
                     </div>
-                    <div class="concept-card" style="border: 3px solid #dc3545;">
-                        <h3>⚠️ Docker 容器</h3>
-                        <p><strong>範例：</strong>Local MCP Server</p>
-                        <ul>
-                            <li>需要 Docker Desktop</li>
-                            <li>服務必須啟動中</li>
-                            <li>設定較複雜</li>
-                        </ul>
-                        <p style="margin-top: 15px;">沒啟動 = 找不到連線</p>
+                    <div class="concept-card">
+                        <h3>📄 createFile</h3>
+                        <p>建立新檔案</p>
                     </div>
-                </div>
-
-                <div class="box danger">
-                    <h3>常見 Docker 錯誤</h3>
-                    <p><code>docker: failed to connect to the docker API ... The system cannot find the file specified.</code></p>
-                    <p><strong>白話解釋：</strong>你裝了電話機（Docker CLI），但沒接電話線（Docker Desktop 背景服務沒啟動）</p>
-                    <p><strong>解決：</strong>開啟 Docker Desktop，等右下角鯨魚圖示停止跳動後再試</p>
+                    <div class="concept-card">
+                        <h3>✏️ updateFile</h3>
+                        <p>更新檔案內容</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🗑️ deleteFile</h3>
+                        <p>刪除檔案</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>👤 getUser</h3>
+                        <p>取得 GitHub 個人資訊</p>
+                    </div>
                 </div>
 
                 <div class="box success">
-                    <strong>建議：</strong>使用 <strong>Remote MCP Server</strong> 就不會遇到 Docker 問題！
+                    <strong>恭喜！GitHub MCP 設定完成！</strong>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 可以做什麼 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🚀 從現在起，AI 可以幫你...</h2>
+
+                <div class="concept-grid">
+                    <div class="concept-card" style="border-left: 5px solid #667eea;">
+                        <h3>自動 commit</h3>
+                        <p>AI 幫你提交程式碼變更</p>
+                    </div>
+                    <div class="concept-card" style="border-left: 5px solid #764ba2;">
+                        <h3>自動 push</h3>
+                        <p>AI 幫你推送到遠端倉庫</p>
+                    </div>
+                    <div class="concept-card" style="border-left: 5px solid #28a745;">
+                        <h3>新增 repo</h3>
+                        <p>AI 幫你建立新的 Repository</p>
+                    </div>
+                    <div class="concept-card" style="border-left: 5px solid #dc3545;">
+                        <h3>改 README</h3>
+                        <p>AI 幫你編輯說明文件</p>
+                    </div>
+                </div>
+
+                <div class="box info" style="text-align: center; font-size: 24px; margin-top: 40px;">
+                    <strong>你的專案都能自動化管理！</strong>
                 </div>
             </div>
         </div>
@@ -549,29 +561,48 @@ gh repo view</pre>
             <div class="content-card">
                 <h2>❓ 常見問題排解</h2>
 
-                <div class="box warning">
-                    <h3>錯誤：Unauthorized / 401</h3>
-                    <p><strong>原因：</strong>Token 無效或權限不足</p>
-                    <p><strong>解決：</strong>重新建立 Token，確認有 Contents (Read and write) 權限</p>
-                </div>
-
-                <div class="box info">
-                    <h3>工具列表是空的</h3>
-                    <p><strong>原因：</strong>MCP Server 還沒啟動</p>
-                    <p><strong>解決：</strong>按 Refresh 按鈕，或重新啟動 Antigravity</p>
+                <div class="box danger">
+                    <h3>錯誤：npm 或 node 找不到</h3>
+                    <p><strong>原因：</strong>Node.js 沒有正確安裝</p>
+                    <p><strong>解決：</strong>重新安裝 Node.js，記得勾選「Add to PATH」</p>
                 </div>
 
                 <div class="box warning">
-                    <h3>GitHub CLI 登入失敗</h3>
-                    <p><strong>原因：</strong>瀏覽器沒有開啟或網路問題</p>
-                    <p><strong>解決：</strong>執行 <code>gh auth login</code> 並選擇「Paste an authentication token」手動輸入 PAT</p>
+                    <h3>錯誤：Token 無效 / Unauthorized</h3>
+                    <p><strong>原因：</strong>Token 過期或權限不足</p>
+                    <p><strong>解決：</strong>重新建立 Token，確認有 Contents (Read & Write) 權限</p>
                 </div>
 
                 <div class="box info">
-                    <h3>gh: command not found</h3>
-                    <p><strong>原因：</strong>GitHub CLI 尚未安裝或未加入 PATH</p>
-                    <p><strong>解決：</strong>重新安裝 GitHub CLI，或重新開啟終端機</p>
+                    <h3>錯誤：Port 3000 已被使用</h3>
+                    <p><strong>原因：</strong>其他程式佔用了 3000 port</p>
+                    <p><strong>解決：</strong>關閉其他程式，或使用其他 port：<br>
+                    <code>npx github-mcp start --token="xxx" --port=3001</code></p>
                 </div>
+
+                <div class="box warning">
+                    <h3>Antigravity 連不上</h3>
+                    <p><strong>原因：</strong>MCP Server 沒有啟動</p>
+                    <p><strong>解決：</strong>確認終端機顯示 "Server running on http://localhost:3000"</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 12: 總結 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📋 安裝步驟總整理</h2>
+
+                <table class="tool-table">
+                    <tr><th>步驟</th><th>指令 / 動作</th></tr>
+                    <tr><td>1. 安裝 Node.js</td><td>下載 <a href="https://nodejs.org/" target="_blank">nodejs.org</a> LTS 版</td></tr>
+                    <tr><td>2. 建立資料夾</td><td><code>mkdir github-mcp && cd github-mcp</code></td></tr>
+                    <tr><td>3. 安裝套件</td><td><code>npm install -g @modelcontextprotocol/github-mcp</code></td></tr>
+                    <tr><td>4. 建立 Token</td><td>GitHub Settings → Fine-grained tokens</td></tr>
+                    <tr><td>5. 啟動 Server</td><td><code>npx github-mcp start --token="xxx"</code></td></tr>
+                    <tr><td>6. 連線 Antigravity</td><td>Host: localhost, Port: 3000</td></tr>
+                    <tr><td>7. 完成！</td><td>看到 Tools 列表 = 成功</td></tr>
+                </table>
 
                 <div class="box success" style="text-align: center; margin-top: 30px;">
                     <h3>GitHub MCP 設定完成！</h3>
