@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 4 - Notion MCP 設定</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons { display: flex; gap: 12px; }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 20;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        h1 { color: #000; font-size: 56px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #000; font-size: 38px; margin-bottom: 35px; border-bottom: 3px solid #000; padding-bottom: 12px; }
+        h3 { color: #000; font-size: 26px; margin: 30px 0 15px 0; }
+        p, li { font-size: 20px; line-height: 1.8; color: #444; margin-bottom: 15px; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 16px; line-height: 1.6; font-family: monospace; }
+        .box { padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; font-size: 20px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .danger { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .highlight { background: #000; padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #fff; }
+
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .concept-card { background: #f8f9fa; padding: 25px; border-radius: 15px; border: 1px solid #e9ecef; transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-8px); border-color: #000; }
+
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 4000; padding: 10px 25px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #000; transform: scale(1.3); }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: #000;
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .step-content { flex: 1; }
+
+        .tool-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+        .tool-table th, .tool-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        .tool-table th { background: #000; color: white; }
+        .tool-table tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <div class="nav-title">Part 4 - Notion MCP 設定</div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h4 style="color: #000; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google Antigravity MCP 架設</h4>
+                <h1>Part 4: Notion MCP 設定</h1>
+                <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
+                    讓 AI 助手直接操作 Notion 頁面、資料庫和留言
+                </h2>
+                <div style="margin-top: 40px; display: flex; gap: 20px;">
+                    <span class="highlight">頁面管理</span>
+                    <span class="highlight">資料庫查詢</span>
+                    <span class="highlight">自動化筆記</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Notion MCP 功能 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 Notion MCP Server 功能</h2>
+                <p>Notion MCP Server 讓 AI 可以直接操作 Notion 工作區：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>📄 頁面管理</h3>
+                        <p>搜尋、建立、編輯 Notion 頁面內容。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📊 資料庫操作</h3>
+                        <p>查詢資料庫、新增資料列、更新欄位。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💬 留言功能</h3>
+                        <p>在頁面上新增留言和評論。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔍 搜尋功能</h3>
+                        <p>全域搜尋工作區內的所有內容。</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>自然語言操作！</strong><br>
+                    「在我的課程資料庫新增一筆記錄」、「幫我搜尋所有關於 AI 的頁面」
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 建立 Integration -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔧 第一步：建立 Notion Integration</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>前往 Notion Integration 設定頁</h3>
+                        <p>打開：<a href="https://www.notion.so/profile/integrations" target="_blank" style="color: #667eea;">https://www.notion.so/profile/integrations</a></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>建立新的 Integration</h3>
+                        <p>點選 <code>Create new integration</code></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h3>設定 Integration 資訊</h3>
+                        <table class="tool-table">
+                            <tr>
+                                <th>欄位</th>
+                                <th>建議值</th>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td>Antigravity MCP</td>
+                            </tr>
+                            <tr>
+                                <td>Capabilities</td>
+                                <td>✔ Read content<br>✔ Insert content（可選）<br>✔ Update content（可選）</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 權限說明 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔐 Integration 權限設定</h2>
+                <p>根據你的需求，選擇適合的權限：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card" style="border: 3px solid #28a745;">
+                        <h3>✅ Read content（必選）</h3>
+                        <p>讓 MCP 可以讀取頁面和資料庫內容</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📝 Insert content（建議）</h3>
+                        <p>讓 MCP 可以新增頁面和資料</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>✏️ Update content（建議）</h3>
+                        <p>讓 MCP 可以更新現有內容</p>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    <strong>安全建議</strong><br>
+                    如果只是想讓 AI 讀取資料，只勾選 Read content 即可<br>
+                    這樣可以避免 AI 意外修改重要內容
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h3>複製 Integration Token</h3>
+                        <p>建立完成後，複製 Token（格式：<code>ntn_xxxxxx</code>）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: 連結頁面 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔗 第二步：將 Integration 連結到頁面</h2>
+                <p><strong>重要！</strong>Notion 要求你必須手動將 Integration 加入每個要存取的頁面。</p>
+
+                <div class="step-item">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h3>打開要連結的 Notion 頁面或資料庫</h3>
+                        <p>例如：你的課程筆記、專案資料庫等</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">6</span>
+                    <div class="step-content">
+                        <h3>點擊右上角 ⋯（三個點）</h3>
+                        <p>找到 <code>Connections</code>（連線）選項</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">7</span>
+                    <div class="step-content">
+                        <h3>新增連線</h3>
+                        <p>點選 <code>Add connections</code> → 選擇你的 Integration（Antigravity MCP）</p>
+                    </div>
+                </div>
+
+                <div class="box danger">
+                    <strong>新版 Notion API 強制規則</strong><br>
+                    如果 Integration 沒有加入某個頁面/資料庫 → AI 完全看不到該內容！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 設定到 Antigravity -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📝 第三步：將 Token 加入 Antigravity</h2>
+
+                <div class="step-item">
+                    <span class="step-number">8</span>
+                    <div class="step-content">
+                        <h3>打開 Antigravity MCP 設定</h3>
+                        <p>Tools → MCP → Notion → 按 <code>Install</code></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">9</span>
+                    <div class="step-content">
+                        <h3>填入 Token</h3>
+                        <p><code>NOTION_TOKEN</code> = ntn_xxxxxxxxxxxxxxxxxxxxx</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>MCP 設定檔格式</strong>
+                    <pre>{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": {
+        "NOTION_TOKEN": "ntn_xxxxxx"
+      }
+    }
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 驗證安裝 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🧪 驗證 Notion MCP 安裝</h2>
+                <p>安裝成功後，在 Antigravity 輸入：</p>
+
+                <pre>notion.list_data_sources</pre>
+                <p>或</p>
+                <pre>列出我的 Notion 資料庫</pre>
+
+                <h3>成功會看到：</h3>
+                <ul>
+                    <li><code>object = "data_source"</code></li>
+                    <li>包含 <code>data_source_id</code></li>
+                    <li>包含 <code>database_parent</code></li>
+                </ul>
+
+                <div class="box success">
+                    <strong>驗證成功！</strong><br>
+                    如果看到以上內容，表示 MCP 已成功連接 Notion API！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 常用指令 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>💬 Notion MCP 實用指令</h2>
+                <p>在 Antigravity 中，用自然語言操作 Notion：</p>
+
+                <h3>🔍 搜尋頁面</h3>
+                <pre>搜尋所有包含「課程」的 Notion 頁面</pre>
+
+                <h3>📄 讀取頁面</h3>
+                <pre>取得頁面 1a6b35e6e67f802fa7e1d27686f017f2 的內容</pre>
+
+                <h3>➕ 新增頁面</h3>
+                <pre>在「開發」頁面下新增一個標題為「Notion MCP」的頁面</pre>
+
+                <h3>💬 新增留言</h3>
+                <pre>在「Getting started」頁面新增留言「Hello MCP」</pre>
+
+                <div class="box info">
+                    <strong>AI 會自動規劃 API 呼叫</strong><br>
+                    例如新增留言，AI 會先呼叫 search API 找到頁面，再呼叫 comments API
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 常見問題 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>❓ 常見問題</h2>
+
+                <div class="box danger">
+                    <h3>問：找不到資料庫/頁面？</h3>
+                    <p><strong>原因：</strong>Integration 沒有被加入該頁面</p>
+                    <p><strong>解決：</strong>到該頁面 → ⋯ → Connections → 新增你的 Integration</p>
+                </div>
+
+                <div class="box warning">
+                    <h3>問：Redirect URI 要填什麼？</h3>
+                    <p><strong>答案：</strong>不用填！</p>
+                    <p>MCP 使用的是 Internal Integration，不需要 OAuth，所以 Redirect URI 保持空白</p>
+                </div>
+
+                <div class="box info">
+                    <h3>問：Token 格式是什麼？</h3>
+                    <p>正確格式：<code>ntn_</code> 開頭，例如 <code>ntn_abc123xyz...</code></p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 完成 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>✅ Notion MCP 設定完成！</h2>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>✔️ 已完成</h3>
+                        <ul>
+                            <li>建立 Notion Integration</li>
+                            <li>設定權限（Read/Write）</li>
+                            <li>連結頁面到 Integration</li>
+                            <li>設定 Token 到 Antigravity</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 可以做到</h3>
+                        <ul>
+                            <li>搜尋 Notion 內容</li>
+                            <li>讀取頁面和資料庫</li>
+                            <li>新增/編輯頁面</li>
+                            <li>新增留言評論</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: center; margin-top: 40px;">
+                    <h3>三大 MCP 都設定完成！</h3>
+                    <p>接下來學習如何整合應用這些工具</p>
+                    <p style="margin-top: 15px;">
+                        <a href="Part5_實戰應用與整合.html" style="color: #155724; font-weight: bold;">前往 Part 5 →</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">❯</button>
+
+    <div class="indicators" id="indicatorContainer"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function init() {
+            createIndicators();
+            showSlide(0);
+            updateButtons();
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        function handleKeydown(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        function createIndicators() {
+            const container = document.getElementById('indicatorContainer');
+            container.innerHTML = '';
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.onclick = () => goToSlide(index);
+                container.appendChild(dot);
+            });
+        }
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

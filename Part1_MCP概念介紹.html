@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 1 - MCP 概念介紹</title>
+    <style>
+        /* 基礎設定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* === 導航列 === */
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons { display: flex; gap: 12px; }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        /* === 導航箭頭 === */
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* === 投影片容器 === */
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 20;
+        }
+
+        /* === 內容卡片 === */
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* 通用樣式 */
+        h1 { color: #667eea; font-size: 56px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 38px; margin-bottom: 35px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 26px; margin: 30px 0 15px 0; }
+        p, li { font-size: 20px; line-height: 1.8; color: #444; margin-bottom: 15px; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 18px; line-height: 1.6; font-family: monospace; }
+        .box { padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; font-size: 20px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .highlight { background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #004d40; }
+
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .concept-card { background: #f8f9fa; padding: 25px; border-radius: 15px; border: 1px solid #e9ecef; transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-8px); border-color: #667eea; }
+
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 4000; padding: 10px 25px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #667eea; transform: scale(1.3); }
+
+        .feature-list { list-style: none; padding: 0; }
+        .feature-list li { padding: 15px 20px; margin: 10px 0; background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1)); border-radius: 10px; border-left: 4px solid #667eea; }
+        .feature-list li::before { content: "✓ "; color: #28a745; font-weight: bold; }
+
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .comparison-table th, .comparison-table td { padding: 15px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        .comparison-table th { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .comparison-table tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+    <!-- 導航列 -->
+    <div class="nav-bar">
+        <div class="nav-title">Part 1 - MCP 概念介紹</div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <!-- 投影片內容 -->
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h4 style="color: #667eea; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google Antigravity MCP 架設</h4>
+                <h1>Part 1: MCP 概念介紹</h1>
+                <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
+                    什麼是 Model Context Protocol？為什麼它能讓 AI 變得更強大？
+                </h2>
+                <div style="margin-top: 40px; display: flex; gap: 20px;">
+                    <span class="highlight">MCP Server</span>
+                    <span class="highlight">AI 工具整合</span>
+                    <span class="highlight">自動化工作流</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: 什麼是 MCP -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔗 什麼是 MCP？</h2>
+                <p><strong>MCP（Model Context Protocol）</strong>是一種新興的標準協議，讓 AI 助手能夠連接外部服務和工具。</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>📡 協議標準</h3>
+                        <p>MCP 提供統一的介面，讓不同的 AI 工具可以使用相同的方式連接各種服務。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔌 外掛架構</h3>
+                        <p>透過 MCP Server，AI 可以存取 GitHub、Netlify、Notion 等平台的 API。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🤖 自然語言操作</h3>
+                        <p>你只需要用自然語言告訴 AI 你想做什麼，AI 會自動呼叫對應的工具完成任務。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🚀 無限擴展</h3>
+                        <p>支援多種 MCP Client：Antigravity、Claude Desktop、Cursor、Windsurf 等。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: MCP 架構 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🏗️ MCP 架構說明</h2>
+                <p>MCP 的運作原理可以分為三個層次：</p>
+
+                <div class="box info">
+                    <strong>🔹 MCP Client（用戶端）</strong><br>
+                    例如：Antigravity、Claude Desktop、Cursor、Windsurf<br>
+                    這是你與 AI 互動的介面
+                </div>
+
+                <div class="box success">
+                    <strong>🔹 MCP Server（伺服器）</strong><br>
+                    例如：GitHub MCP、Netlify MCP、Notion MCP<br>
+                    這是連接外部服務的橋樑，提供 API 工具給 AI 使用
+                </div>
+
+                <div class="box warning">
+                    <strong>🔹 外部服務</strong><br>
+                    例如：GitHub API、Netlify API、Notion API<br>
+                    這是實際執行操作的平台
+                </div>
+
+                <pre>
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│   MCP Client    │────▶│   MCP Server    │────▶│   External API  │
+│  (Antigravity)  │◀────│  (GitHub MCP)   │◀────│   (GitHub API)  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+        │                                               │
+        └───────────────── 自然語言 ─────────────────────┘
+                </pre>
+            </div>
+        </div>
+
+        <!-- Slide 4: 為什麼需要 MCP -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>💡 為什麼需要 MCP？</h2>
+
+                <h3>傳統方式 vs MCP 方式</h3>
+                <table class="comparison-table">
+                    <tr>
+                        <th>比較項目</th>
+                        <th>傳統方式</th>
+                        <th>MCP 方式</th>
+                    </tr>
+                    <tr>
+                        <td>操作介面</td>
+                        <td>需要熟悉各平台介面</td>
+                        <td>統一用自然語言操作</td>
+                    </tr>
+                    <tr>
+                        <td>學習成本</td>
+                        <td>每個平台都要學</td>
+                        <td>只需會跟 AI 對話</td>
+                    </tr>
+                    <tr>
+                        <td>自動化</td>
+                        <td>需要寫程式串接 API</td>
+                        <td>AI 自動呼叫工具</td>
+                    </tr>
+                    <tr>
+                        <td>效率</td>
+                        <td>切換多個視窗操作</td>
+                        <td>一個對話框完成所有事</td>
+                    </tr>
+                </table>
+
+                <div class="box success">
+                    <strong>MCP 讓你可以：</strong><br>
+                    「幫我建立一個 GitHub repo，然後部署到 Netlify，再把連結記錄到 Notion」<br>
+                    一句話完成跨平台操作！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: MCP Client 介紹 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🖥️ 支援 MCP 的 Client</h2>
+                <p>目前主流的 MCP Client 包括：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🌐 Google Antigravity</h3>
+                        <p>OpenAI 推出的桌面版 AI 助手，支援 Remote MCP Server，安裝最簡單。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🤖 Claude Desktop</h3>
+                        <p>Anthropic 推出的桌面應用，支援本地 MCP Server 設定。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💻 Cursor IDE</h3>
+                        <p>AI 驅動的程式編輯器，內建 MCP 支援，適合開發者。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🌊 Windsurf</h3>
+                        <p>另一款 AI 開發工具，支援 MCP 整合。</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>本課程使用 Google Antigravity 作為示範</strong><br>
+                    因為它支援 Remote MCP Server，設定最簡單，不需要 Docker！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: MCP Server 種類 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🔧 常見的 MCP Server</h2>
+                <p>本課程將教你設定以下三個最實用的 MCP Server：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card" style="border-left: 5px solid #333;">
+                        <h3>🐙 GitHub MCP</h3>
+                        <p>管理程式碼倉庫、Issue、Pull Request、Actions 等。</p>
+                        <ul class="feature-list">
+                            <li>瀏覽和查詢程式碼</li>
+                            <li>建立和管理 Issue</li>
+                            <li>建立 Pull Request</li>
+                            <li>監控 CI/CD 狀態</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card" style="border-left: 5px solid #00c7b7;">
+                        <h3>🚀 Netlify MCP</h3>
+                        <p>管理網站部署、環境變數、網域設定等。</p>
+                        <ul class="feature-list">
+                            <li>建立和部署專案</li>
+                            <li>管理環境變數</li>
+                            <li>設定網域</li>
+                            <li>查看部署紀錄</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card" style="border-left: 5px solid #000;">
+                        <h3>📝 Notion MCP</h3>
+                        <p>操作 Notion 頁面、資料庫、留言等。</p>
+                        <ul class="feature-list">
+                            <li>搜尋頁面和資料庫</li>
+                            <li>新增和編輯頁面</li>
+                            <li>查詢資料庫內容</li>
+                            <li>新增留言和評論</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 前置準備 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>📋 前置準備</h2>
+                <p>在開始設定 MCP 之前，請確認你已準備好以下項目：</p>
+
+                <h3>✅ 必要工具</h3>
+                <ul class="feature-list">
+                    <li>Google Antigravity 桌面版（或其他 MCP Client）</li>
+                    <li>GitHub 帳號（用於 GitHub MCP）</li>
+                    <li>Netlify 帳號（用於 Netlify MCP）</li>
+                    <li>Notion 帳號（用於 Notion MCP）</li>
+                </ul>
+
+                <h3>✅ 選用工具（進階）</h3>
+                <ul class="feature-list">
+                    <li>Node.js 22 或更高版本（部分 MCP 需要）</li>
+                    <li>Docker Desktop（本地 MCP Server 需要）</li>
+                </ul>
+
+                <div class="box info">
+                    <strong>好消息！</strong><br>
+                    使用 Remote MCP Server 的話，不需要安裝 Node.js 和 Docker！<br>
+                    Antigravity 支援 Remote MCP，設定超簡單！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: 本課程學習目標 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2>🎯 本課程學習目標</h2>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>Part 1</h3>
+                        <p>理解 MCP 的概念和架構</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Part 2</h3>
+                        <p>設定 GitHub MCP Server</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Part 3</h3>
+                        <p>設定 Netlify MCP Server</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Part 4</h3>
+                        <p>設定 Notion MCP Server</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>Part 5</h3>
+                        <p>實戰應用與整合案例</p>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: center; margin-top: 40px;">
+                    <h3>準備好了嗎？</h3>
+                    <p>接下來我們將開始設定第一個 MCP Server：<strong>GitHub MCP</strong></p>
+                    <p style="margin-top: 15px;">
+                        <a href="Part2_GitHub_MCP設定.html" style="color: #155724; font-weight: bold;">前往 Part 2 →</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 導航箭頭 -->
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">❯</button>
+
+    <!-- 頁碼指示器 -->
+    <div class="indicators" id="indicatorContainer"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function init() {
+            createIndicators();
+            showSlide(0);
+            updateButtons();
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        function handleKeydown(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        function createIndicators() {
+            const container = document.getElementById('indicatorContainer');
+            container.innerHTML = '';
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.onclick = () => goToSlide(index);
+                container.appendChild(dot);
+            });
+        }
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

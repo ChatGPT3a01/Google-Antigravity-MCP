@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Part 3 - Netlify MCP 設定</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow: hidden;
+            color: #333;
+        }
+
+        .nav-bar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+            z-index: 10000;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .nav-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            letter-spacing: 1px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .nav-buttons { display: flex; gap: 12px; }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .nav-arrow {
+            position: fixed;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.25);
+            color: white;
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.4);
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 9000;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .nav-arrow:hover {
+            background: rgba(255,255,255,0.5);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .prev-arrow { left: 30px; }
+        .next-arrow { right: 30px; }
+        .nav-arrow:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        .slide-container {
+            width: 100%;
+            height: 100vh;
+            padding-top: 60px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .slide {
+            position: absolute;
+            top: 60px; left: 0;
+            width: 100%;
+            height: calc(100vh - 60px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            z-index: 10;
+        }
+
+        .slide.active {
+            display: flex;
+            opacity: 1;
+            z-index: 20;
+        }
+
+        .content-card {
+            background: rgba(255, 255, 255, 0.98);
+            border-radius: 24px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            padding: 60px;
+            max-width: 1400px;
+            width: 95%;
+            max-height: 88vh;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        h1 { color: #667eea; font-size: 56px; margin-bottom: 24px; text-align: center; }
+        h2 { color: #764ba2; font-size: 38px; margin-bottom: 35px; border-bottom: 3px solid #667eea; padding-bottom: 12px; }
+        h3 { color: #667eea; font-size: 26px; margin: 30px 0 15px 0; }
+        p, li { font-size: 20px; line-height: 1.8; color: #444; margin-bottom: 15px; }
+        code { background: #f0f2f5; padding: 3px 8px; border-radius: 6px; font-family: monospace; color: #d63384; font-weight: 600; font-size: 0.95em; }
+        pre { background: #282c34; color: #abb2bf; padding: 25px; border-radius: 12px; overflow-x: auto; margin: 25px 0; font-size: 16px; line-height: 1.6; font-family: monospace; }
+        .box { padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 6px solid; font-size: 20px; }
+        .info { background: #e3f2fd; border-color: #2196f3; color: #0d47a1; }
+        .warning { background: #fff3cd; border-color: #ffc107; color: #856404; }
+        .success { background: #d4edda; border-color: #28a745; color: #155724; }
+        .danger { background: #f8d7da; border-color: #dc3545; color: #721c24; }
+        .highlight { background: linear-gradient(120deg, #00c7b7 0%, #00d4aa 100%); padding: 2px 6px; border-radius: 4px; font-weight: bold; color: #fff; }
+
+        .concept-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .concept-card { background: #f8f9fa; padding: 25px; border-radius: 15px; border: 1px solid #e9ecef; transition: transform 0.3s; }
+        .concept-card:hover { transform: translateY(-8px); border-color: #00c7b7; }
+
+        .indicators { position: fixed; bottom: 25px; left: 50%; transform: translateX(-50%); display: flex; gap: 12px; z-index: 4000; padding: 10px 25px; background: rgba(0,0,0,0.3); border-radius: 30px; backdrop-filter: blur(5px); }
+        .dot { width: 12px; height: 12px; background: rgba(255,255,255,0.4); border-radius: 50%; cursor: pointer; transition: all 0.3s; }
+        .dot.active { background: #00c7b7; transform: scale(1.3); }
+
+        .step-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #00c7b7, #00d4aa);
+            color: white;
+            border-radius: 50%;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step-item {
+            display: flex;
+            align-items: flex-start;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+        }
+
+        .step-content { flex: 1; }
+
+        .tool-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 16px; }
+        .tool-table th, .tool-table td { padding: 12px; text-align: left; border-bottom: 1px solid #e9ecef; }
+        .tool-table th { background: linear-gradient(135deg, #00c7b7, #00d4aa); color: white; }
+        .tool-table tr:hover { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+
+    <div class="nav-bar">
+        <div class="nav-title">Part 3 - Netlify MCP 設定</div>
+        <div class="nav-buttons">
+            <a href="index.html" class="nav-btn">🏠 首頁</a>
+            <button class="nav-btn" onclick="toggleFullscreen()">🖥️ 全螢幕</button>
+        </div>
+    </div>
+
+    <div class="slide-container">
+
+        <!-- Slide 1: 封面 -->
+        <div class="slide active">
+            <div class="content-card" style="text-align: center; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+                <h4 style="color: #00c7b7; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px;">Google Antigravity MCP 架設</h4>
+                <h1 style="color: #00c7b7;">Part 3: Netlify MCP 設定</h1>
+                <h2 style="border: none; font-weight: normal; font-size: 28px; color: #666; max-width: 800px;">
+                    讓 AI 助手自動部署網站、管理環境變數和網域設定
+                </h2>
+                <div style="margin-top: 40px; display: flex; gap: 20px;">
+                    <span class="highlight">自動部署</span>
+                    <span class="highlight">環境變數</span>
+                    <span class="highlight">表單管理</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Netlify MCP 功能 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">🚀 Netlify MCP Server 功能</h2>
+                <p>Netlify MCP Server 讓 AI 可以直接操作 Netlify 平台：</p>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🌐 專案管理</h3>
+                        <p>建立、管理和部署 Netlify 專案，查看部署狀態。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📦 部署服務</h3>
+                        <p>部署網站、查看部署紀錄、回滾到之前版本。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔐 環境變數</h3>
+                        <p>建立、更新、刪除環境變數和 Secrets。</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📝 表單管理</h3>
+                        <p>啟用和管理表單提交功能。</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>一句話部署！</strong><br>
+                    只需要說「幫我把這個專案部署到 Netlify」，AI 就會自動完成！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: 前置準備 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">📋 前置準備</h2>
+
+                <div class="concept-grid">
+                    <div class="concept-card" style="border: 3px solid #00c7b7;">
+                        <h3>✅ 必要條件</h3>
+                        <ul>
+                            <li>Netlify 帳號</li>
+                            <li>Node.js 22 或更高版本</li>
+                            <li>MCP Client（Antigravity）</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h3>💡 建議安裝</h3>
+                        <p>安裝 Netlify CLI 可以獲得更好的體驗：</p>
+                        <pre style="margin: 10px 0;">npm install -g netlify-cli</pre>
+                    </div>
+                </div>
+
+                <div class="box warning">
+                    <strong>檢查 Node.js 版本</strong><br>
+                    打開終端機輸入：<code>node --version</code><br>
+                    需要 v22 或更高版本
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: 方法一 - CLI 登入 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">🔑 方法一：使用 CLI 取得 Token（推薦）</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>安裝 Netlify CLI</h3>
+                        <pre>npm install -g netlify-cli</pre>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>執行登入指令</h3>
+                        <pre>netlify login</pre>
+                        <p>瀏覽器會自動開啟，登入你的 Netlify 帳號並授權</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h3>Token 自動存儲</h3>
+                        <p>Token 會自動存在：</p>
+                        <pre>C:\Users\你的帳號\AppData\Roaming\netlify\Config\config.json</pre>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    <strong>快速查看 Token</strong><br>
+                    按 Win + R，輸入 <code>%APPDATA%\netlify\Config</code>，打開 config.json
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: 方法二 - 手動建立 PAT -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">🔐 方法二：手動建立 Personal Access Token</h2>
+
+                <div class="step-item">
+                    <span class="step-number">1</span>
+                    <div class="step-content">
+                        <h3>前往 Netlify 設定頁</h3>
+                        <p>登入 Netlify → 點擊右上角大頭貼 → User settings</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">2</span>
+                    <div class="step-content">
+                        <h3>建立 Access Token</h3>
+                        <p>OAuth → Personal access tokens → <code>New access token</code></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">3</span>
+                    <div class="step-content">
+                        <h3>設定 Token 名稱</h3>
+                        <ul>
+                            <li><strong>名稱：</strong>Antigravity MCP</li>
+                            <li><strong>到期日：</strong>選擇適合的期限</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">4</span>
+                    <div class="step-content">
+                        <h3>複製 Token</h3>
+                        <p>按 <code>Generate token</code>，立即複製（只會顯示一次）</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: 設定到 Antigravity -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">📝 將 Token 加入 Antigravity</h2>
+
+                <div class="step-item">
+                    <span class="step-number">5</span>
+                    <div class="step-content">
+                        <h3>打開 Antigravity MCP 設定</h3>
+                        <p>找到 MCP Servers → Netlify → 按 <code>Install</code></p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">6</span>
+                    <div class="step-content">
+                        <h3>填入 Token</h3>
+                        <p>在 <code>NETLIFY_TOKEN</code> 欄位填入你的 Token</p>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <span class="step-number">7</span>
+                    <div class="step-content">
+                        <h3>完成！</h3>
+                        <p>畫面顯示：「Saving to config and reloading MCP server list.」</p>
+                    </div>
+                </div>
+
+                <div class="box info">
+                    <strong>MCP 設定檔格式</strong>
+                    <pre>{
+  "mcpServers": {
+    "netlify": {
+      "command": "npx",
+      "args": ["-y", "@netlify/mcp"],
+      "env": {
+        "NETLIFY_PERSONAL_ACCESS_TOKEN": "YOUR_TOKEN"
+      }
+    }
+  }
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: 驗證安裝 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">🧪 驗證 Netlify MCP 安裝</h2>
+                <p>安裝成功後，在 Antigravity 輸入：</p>
+
+                <pre>mcp list</pre>
+                <p>或</p>
+                <pre>list mcp servers</pre>
+
+                <h3>成功會看到以下工具：</h3>
+                <table class="tool-table">
+                    <tr>
+                        <th>工具名稱</th>
+                        <th>功能</th>
+                    </tr>
+                    <tr>
+                        <td><code>netlify-coding-rules</code></td>
+                        <td>檢查 Serverless/Edge Functions 規則</td>
+                    </tr>
+                    <tr>
+                        <td><code>netlify-deploy-services-reader</code></td>
+                        <td>讀取部署資訊</td>
+                    </tr>
+                    <tr>
+                        <td><code>netlify-deploy-services-updater</code></td>
+                        <td>部署網站</td>
+                    </tr>
+                    <tr>
+                        <td><code>netlify-project-services-reader</code></td>
+                        <td>讀取專案/表單資訊</td>
+                    </tr>
+                    <tr>
+                        <td><code>netlify-project-services-updater</code></td>
+                        <td>更新專案設定/環境變數</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- Slide 8: 連結專案 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">🔗 連結 Netlify 專案</h2>
+                <p>使用 CLI 連結本地專案和 Netlify 網站：</p>
+
+                <pre>netlify link</pre>
+
+                <h3>選擇連結方式：</h3>
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>🔍 搜尋專案名稱</h3>
+                        <p>輸入專案名稱的部分文字進行搜尋</p>
+                    </div>
+                    <div class="concept-card" style="border: 2px solid #00c7b7;">
+                        <h3>📋 從清單選擇（推薦）</h3>
+                        <p>列出最近更新的專案，直接選擇</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🆔 輸入專案 ID</h3>
+                        <p>手動輸入 Site ID / Project ID</p>
+                    </div>
+                </div>
+
+                <div class="box success">
+                    <strong>連結成功後</strong><br>
+                    會在專案資料夾建立 <code>.netlify/state.json</code>，之後可以直接：<br>
+                    <code>netlify deploy</code> 或 <code>netlify deploy --prod</code>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: 實用指令 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">💬 Netlify MCP 實用指令</h2>
+                <p>在 Antigravity 中，你可以用自然語言操作 Netlify：</p>
+
+                <h3>🎯 列出專案</h3>
+                <pre>列出我所有 Netlify 專案</pre>
+
+                <h3>🎯 查看部署紀錄</h3>
+                <pre>查看我某個 Netlify 網站最近 5 次部署紀錄</pre>
+
+                <h3>🎯 部署網站</h3>
+                <pre>幫我部署 Netlify 上的 [網站名稱] 最新版本</pre>
+
+                <h3>🎯 部署 ZIP 檔案</h3>
+                <ol>
+                    <li>將 ZIP 檔案放到指定資料夾</li>
+                    <li>告訴 AI 該 ZIP 檔案的名稱</li>
+                    <li>告訴 AI 要建立新網站還是更新現有網站</li>
+                </ol>
+
+                <div class="box info">
+                    <strong>提示：</strong>MCP 不是自己打指令，而是用自然語言告訴 AI 你想做什麼！
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: 完成 -->
+        <div class="slide">
+            <div class="content-card">
+                <h2 style="color: #00c7b7; border-color: #00c7b7;">✅ Netlify MCP 設定完成！</h2>
+
+                <div class="concept-grid">
+                    <div class="concept-card">
+                        <h3>✔️ 已完成</h3>
+                        <ul>
+                            <li>安裝 Netlify CLI</li>
+                            <li>取得 Access Token</li>
+                            <li>設定到 Antigravity</li>
+                            <li>驗證 MCP 工具</li>
+                        </ul>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 可以做到</h3>
+                        <ul>
+                            <li>自動部署網站</li>
+                            <li>管理環境變數</li>
+                            <li>查看部署紀錄</li>
+                            <li>管理表單提交</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="box success" style="text-align: center; margin-top: 40px;">
+                    <h3>Netlify MCP 設定完成！</h3>
+                    <p>接下來學習如何設定 Notion MCP</p>
+                    <p style="margin-top: 15px;">
+                        <a href="Part4_Notion_MCP設定.html" style="color: #155724; font-weight: bold;">前往 Part 4 →</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <button class="nav-arrow prev-arrow" id="prevBtn" onclick="changeSlide(-1)">❮</button>
+    <button class="nav-arrow next-arrow" id="nextBtn" onclick="changeSlide(1)">❯</button>
+
+    <div class="indicators" id="indicatorContainer"></div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+
+        function init() {
+            createIndicators();
+            showSlide(0);
+            updateButtons();
+            document.addEventListener('keydown', handleKeydown);
+        }
+
+        function handleKeydown(e) {
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+            if (e.key === 'ArrowRight') changeSlide(1);
+        }
+
+        function createIndicators() {
+            const container = document.getElementById('indicatorContainer');
+            container.innerHTML = '';
+            slides.forEach((_, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'dot';
+                dot.onclick = () => goToSlide(index);
+                container.appendChild(dot);
+            });
+        }
+
+        function showSlide(index) {
+            if (index < 0) index = 0;
+            if (index >= totalSlides) index = totalSlides - 1;
+
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach((dot, idx) => {
+                dot.classList.toggle('active', idx === index);
+            });
+
+            updateButtons();
+        }
+
+        function changeSlide(direction) {
+            showSlide(currentSlide + direction);
+        }
+
+        function goToSlide(index) {
+            showSlide(index);
+        }
+
+        function updateButtons() {
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('nextBtn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function toggleFullscreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
